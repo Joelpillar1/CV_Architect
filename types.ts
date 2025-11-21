@@ -26,6 +26,10 @@ export interface ResumeData {
   education: Education[];
   skills: string; // Comma separated for simplicity in editing
   certifications: string; // Comma separated
+  keyAchievements?: string; // New field for the Achievements tab
+  jobDescription?: string; // New field for Job Match tab
+  font?: string;
+  fontSize?: number;
 }
 
 export type TemplateType = 'modern' | 'classic' | 'academic' | 'executive' | 'minimal';
@@ -65,5 +69,8 @@ export const INITIAL_DATA: ResumeData = {
     }
   ],
   skills: "Business Development, KOL Management, Blockchain Technology, Market Analysis, Team Leadership, Data Analysis Tools (Excel)",
-  certifications: "Google Data Analytics Certificate, Coursera Business Management"
+  certifications: "Google Data Analytics Certificate, Coursera Business Management",
+  keyAchievements: "• Built and managed partnership pipelines that consistently drove trading activity and improved campaign ROI.\n• Strengthened brand visibility by coordinating over 5+ offline events and educational seminars across major cities.\n• Drove affiliate growth at Bybit, onboarding high-value partners and boosting trading volume through targeted campaign management.",
+  font: 'Helvetica, Arial, sans-serif',
+  fontSize: 12.5
 };

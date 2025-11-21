@@ -1,12 +1,12 @@
 import React from 'react';
 import { ResumeData } from '../../types';
-import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import { Mail, Phone, Linkedin } from 'lucide-react';
 
 export default function AcademicTemplate({ data }: { data: ResumeData }) {
   return (
-    <div className="p-10 font-serif text-gray-900 max-w-full h-full text-sm">
+    <>
       {/* Header */}
-      <header className="text-center mb-6">
+      <header className="text-center mb-6 break-inside-avoid">
         <h1 className="text-3xl font-normal uppercase tracking-widest mb-2">{data.fullName}</h1>
         <p className="text-lg italic text-gray-600 mb-3">{data.jobTitle}</p>
         <div className="flex justify-center items-center gap-4 text-xs text-gray-700">
@@ -25,28 +25,26 @@ export default function AcademicTemplate({ data }: { data: ResumeData }) {
       </section>
 
       {/* Experience */}
-      <section className="mb-6">
-        <h3 className="font-bold uppercase tracking-wide text-xs text-gray-500 mb-3">Professional Experience</h3>
-        <div className="space-y-5">
-          {data.experience.map((exp) => (
-            <div key={exp.id}>
-              <div className="flex justify-between font-bold text-base">
-                <span>{exp.role}</span>
-                <span>{exp.startDate} – {exp.endDate}</span>
-              </div>
-              <div className="italic text-gray-600 mb-1">{exp.company}</div>
-              <div className="pl-4 border-l border-gray-300 text-gray-700 leading-tight space-y-1">
-                 {exp.description.split('\n').map((line, i) => (
-                   line.trim() ? <p key={i}>- {line.replace(/^[•-]\s*/, '')}</p> : null
-                ))}
-              </div>
+      <h3 className="font-bold uppercase tracking-wide text-xs text-gray-500 mb-3">Professional Experience</h3>
+      <div className="space-y-5 mb-6">
+        {data.experience.map((exp) => (
+        <div key={exp.id} className="break-inside-avoid">
+            <div className="flex justify-between font-bold text-base">
+            <span>{exp.role}</span>
+            <span>{exp.startDate} – {exp.endDate}</span>
             </div>
-          ))}
+            <div className="italic text-gray-600 mb-1">{exp.company}</div>
+            <div className="pl-4 border-l border-gray-300 text-gray-700 leading-tight space-y-1">
+                {exp.description.split('\n').map((line, i) => (
+                line.trim() ? <p key={i}>- {line.replace(/^[•-]\s*/, '')}</p> : null
+            ))}
+            </div>
         </div>
-      </section>
+        ))}
+      </div>
 
       {/* Two Column Layout for Education and Skills */}
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-2 gap-8 mb-8 break-inside-avoid">
         <section>
           <h3 className="font-bold uppercase tracking-wide text-xs text-gray-500 mb-3">Education</h3>
           {data.education.map(edu => (
@@ -69,9 +67,9 @@ export default function AcademicTemplate({ data }: { data: ResumeData }) {
       </div>
       
       {/* Footer Note */}
-      <div className="mt-8 pt-4 border-t border-gray-100 text-center text-xs text-gray-400">
+      <div className="mt-8 pt-4 border-t border-gray-100 text-center text-xs text-gray-400 break-inside-avoid">
         References available upon request
       </div>
-    </div>
+    </>
   );
 }

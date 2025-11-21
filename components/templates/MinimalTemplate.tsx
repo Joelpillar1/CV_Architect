@@ -3,7 +3,7 @@ import { ResumeData } from '../../types';
 
 export default function MinimalTemplate({ data }: { data: ResumeData }) {
   return (
-    <div className="p-12 font-sans text-gray-800 h-full max-w-full flex flex-col">
+    <div className="p-12 text-gray-800 h-full max-w-full flex flex-col">
        <header className="mb-12">
          <h1 className="text-6xl font-light tracking-tighter mb-4 text-black">{data.fullName}</h1>
          <div className="flex text-sm font-medium text-gray-400 uppercase tracking-widest space-x-6">
@@ -16,7 +16,7 @@ export default function MinimalTemplate({ data }: { data: ResumeData }) {
          <div className="col-span-3 space-y-12">
             <div>
               <h3 className="font-bold text-black mb-4 text-sm">CONTACT</h3>
-              <div className="text-sm text-gray-500 space-y-1 flex flex-col">
+              <div className="text-gray-500 space-y-1 flex flex-col text-sm">
                 <span>{data.email}</span>
                 <span>{data.phone}</span>
                 <span className="truncate">{data.linkedin}</span>
@@ -27,7 +27,7 @@ export default function MinimalTemplate({ data }: { data: ResumeData }) {
               <h3 className="font-bold text-black mb-4 text-sm">EDUCATION</h3>
               <div className="space-y-4">
                 {data.education.map(edu => (
-                  <div key={edu.id} className="text-sm text-gray-500">
+                  <div key={edu.id} className="text-gray-500">
                     <div className="text-gray-900 font-medium">{edu.school}</div>
                     <div>{edu.degree}</div>
                     <div className="text-xs mt-1">{edu.year}</div>

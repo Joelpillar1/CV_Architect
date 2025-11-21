@@ -36,6 +36,7 @@ export default function App() {
             data={resumeData} 
             onChange={setResumeData} 
             template={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
             onBack={() => setCurrentView(View.TEMPLATES)}
           />
         );
@@ -46,6 +47,16 @@ export default function App() {
     }
   };
 
+  // Editor View has a completely different layout (no sidebar)
+  if (currentView === View.EDITOR) {
+    return (
+       <div className="h-screen w-screen overflow-hidden bg-brand-bg font-sans text-brand-dark">
+          {renderContent()}
+       </div>
+    );
+  }
+
+  // Standard Dashboard Layout
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-brand-bg font-sans text-brand-dark">
       {/* Mobile Menu Overlay */}
@@ -84,7 +95,7 @@ export default function App() {
           <SidebarItem 
             icon={<Layout size={18} />} 
             label="Templates" 
-            active={currentView === View.TEMPLATES || currentView === View.EDITOR} 
+            active={currentView === View.TEMPLATES} 
             onClick={() => { setCurrentView(View.TEMPLATES); setIsMobileMenuOpen(false); }} 
           />
           <SidebarItem 
@@ -110,23 +121,21 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full w-full relative overflow-hidden bg-brand-bg">
-        {currentView !== View.EDITOR && (
-          <header className="h-20 flex items-center justify-between px-8 no-print shrink-0 bg-brand-bg/80 backdrop-blur-md z-10">
-            <div className="flex items-center gap-4">
-              <button 
-                className="md:hidden p-2 text-brand-dark hover:bg-gray-100 rounded-md"
-                onClick={() => setIsMobileMenuOpen(true)}
-              >
-                <Menu size={24} />
-              </button>
-              <div className="flex items-center text-sm text-gray-400">
-                <span className="hover:text-brand-dark cursor-pointer transition-colors" onClick={() => setCurrentView(View.OVERVIEW)}>Home</span>
-                <ChevronRight size={14} className="mx-2" />
-                <span className="font-medium text-brand-dark capitalize">{currentView.toLowerCase()}</span>
-              </div>
+        <header className="h-20 flex items-center justify-between px-8 no-print shrink-0 bg-brand-bg/80 backdrop-blur-md z-10">
+          <div className="flex items-center gap-4">
+            <button 
+              className="md:hidden p-2 text-brand-dark hover:bg-gray-100 rounded-md"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <div className="flex items-center text-sm text-gray-400">
+              <span className="hover:text-brand-dark cursor-pointer transition-colors" onClick={() => setCurrentView(View.OVERVIEW)}>Home</span>
+              <ChevronRight size={14} className="mx-2" />
+              <span className="font-medium text-brand-dark capitalize">{currentView.toLowerCase()}</span>
             </div>
-          </header>
-        )}
+          </div>
+        </header>
 
         <div className="flex-1 overflow-hidden relative">
           {renderContent()}
