@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Layout, FileText, Settings as SettingsIcon, Home, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Layout, FileText, Settings as SettingsIcon, Home, ChevronRight, ChevronLeft, Menu, X, LogOut } from 'lucide-react';
 import { ResumeData, INITIAL_DATA, TemplateType } from './types';
 import Editor from './components/Editor';
 import Overview from './components/Overview';
 import Templates from './components/Templates';
 import { Settings } from './components/Settings';
+import LandingPage from './components/LandingPage';
 
 enum View {
+  LANDING = 'LANDING',
   OVERVIEW = 'OVERVIEW',
   TEMPLATES = 'TEMPLATES',
   EDITOR = 'EDITOR',
@@ -14,9 +16,10 @@ enum View {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<View>(View.OVERVIEW);
+  // Initial view is now LANDING
+  const [currentView, setCurrentView] = useState<View>(View.LANDING);
   const [resumeData, setResumeData] = useState<ResumeData>(INITIAL_DATA);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('vanguard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -25,8 +28,19 @@ export default function App() {
     setCurrentView(View.EDITOR);
   };
 
+  // Handle login/signup simulation by moving to the dashboard
+  const handleGetStarted = () => {
+    setCurrentView(View.OVERVIEW);
+  };
+
+  const handleLogout = () => {
+    setCurrentView(View.LANDING);
+  };
+
   const renderContent = () => {
     switch (currentView) {
+      case View.LANDING:
+        return <LandingPage onGetStarted={handleGetStarted} />;
       case View.OVERVIEW:
         return <Overview onCreateNew={() => setCurrentView(View.TEMPLATES)} />;
       case View.TEMPLATES:
@@ -44,9 +58,18 @@ export default function App() {
       case View.SETTINGS:
         return <Settings />;
       default:
-        return <Overview onCreateNew={() => setCurrentView(View.TEMPLATES)} />;
+        return <LandingPage onGetStarted={handleGetStarted} />;
     }
   };
+
+  // Landing Page View (Full Screen, no sidebar)
+  if (currentView === View.LANDING) {
+     return (
+        <div className="min-h-screen w-full bg-brand-bg">
+           {renderContent()}
+        </div>
+     );
+  }
 
   // Editor View has a completely different layout (no sidebar)
   if (currentView === View.EDITOR) {
@@ -121,15 +144,25 @@ export default function App() {
           />
         </nav>
 
-        <div className={`p-4 border-t border-brand-border bg-brand-secondary/30 transition-all duration-300 ${isSidebarCollapsed ? 'items-center justify-center' : ''}`}>
-          <div className={`flex items-center gap-3 ${isSidebarCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-10 h-10 rounded-full bg-brand-dark text-brand-green flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
-              AA
+        <div className="p-4 border-t border-brand-border bg-brand-secondary/30">
+          <div className={`flex items-center gap-3 ${isSidebarCollapsed ? 'flex-col space-y-3' : 'justify-between'}`}>
+            <div className={`flex items-center gap-3 w-full ${isSidebarCollapsed ? 'justify-center' : ''}`}>
+              <div className="w-10 h-10 rounded-full bg-brand-dark text-brand-green flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                JO
+              </div>
+              <div className={`flex-1 min-w-0 ${isSidebarCollapsed ? 'hidden' : ''}`}>
+                <p className="text-sm font-semibold text-brand-dark truncate">Joel O.</p>
+                <p className="text-xs text-gray-500 truncate">Pro Plan Member</p>
+              </div>
             </div>
-            <div className={`flex-1 min-w-0 transition-all duration-300 ${isSidebarCollapsed ? 'w-0 opacity-0 hidden' : 'w-auto opacity-100'}`}>
-              <p className="text-sm font-semibold text-brand-dark truncate">Abdullahi A.</p>
-              <p className="text-xs text-gray-500 truncate">Pro Plan Member</p>
-            </div>
+            <button
+              onClick={handleLogout}
+              title="Logout"
+              className={`flex items-center gap-2 p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors text-sm font-semibold ${isSidebarCollapsed ? 'w-full justify-center' : ''}`}
+            >
+              <LogOut size={16} />
+              <span className={isSidebarCollapsed ? 'hidden' : ''}>Logout</span>
+            </button>
           </div>
         </div>
       </aside>
@@ -169,7 +202,7 @@ const SidebarItem = ({ icon, label, active, collapsed, onClick }: { icon: React.
       ${collapsed ? 'justify-center' : ''}
     `}
   >
-    {React.cloneElement(icon as React.ReactElement, { 
+    {React.cloneElement(icon as React.ReactElement<any>, { 
       className: `transition-colors duration-300 shrink-0 ${active ? 'text-brand-green' : 'text-gray-400 group-hover:text-brand-dark'}` 
     })}
     

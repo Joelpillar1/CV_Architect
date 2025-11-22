@@ -20,6 +20,7 @@ export interface ResumeData {
   email: string;
   phone: string;
   linkedin: string;
+  atHandle?: string;
   location: string;
   summary: string;
   experience: Experience[];
@@ -32,45 +33,47 @@ export interface ResumeData {
   fontSize?: number;
 }
 
-export type TemplateType = 'modern' | 'classic' | 'academic' | 'executive' | 'minimal';
+// Add 'vanguard' and remove the deleted templates for now.
+export type TemplateType = 'vanguard';
 
 export const INITIAL_DATA: ResumeData = {
-  fullName: "Abdullahi Aishat",
-  jobTitle: "Business Developer | KOL Affiliate Manager",
-  email: "aishataabdullahi595@gmail.com",
-  phone: "+234 70 5375 3968",
-  linkedin: "linkedin.com/abdullahi-a-isha",
-  location: "Lagos, Nigeria",
-  summary: "I bring 4 years of experience in business development, KOL management, and growth strategy, helping Web3 and fintech companies scale. I specialize in managing influencer and affiliate networks, launching user acquisition funnels, and executing growth strategies that boost engagement and retention.",
+  fullName: "Joel Olamilekan Opowoye",
+  jobTitle: "UIUX Designer",
+  email: "joelpillar51@gmail.com",
+  phone: "+123-456-7890", // Kept for other templates, used as placeholder
+  atHandle: "@johnsmith",
+  linkedin: "linkedin.com/in/johnsmith",
+  location: "San Francisco, CA",
+  summary: "Creative UI/UX Designer specializing in crafting modern, intuitive interfaces for mobile and web applications. Adept at using user research, design thinking, and rapid prototyping to solve real user problems. Experienced in building design systems, delivering polished visuals, and collaborating with engineers to bring products to life. Dedicated to shipping beautiful, functional products that users love.",
   experience: [
     {
       id: '1',
-      company: "MEXC",
-      role: "Business Development Manager",
-      startDate: "Contract",
-      endDate: "",
-      description: "• Led KOL and affiliate-driven campaigns, collaborating with influencers to drive adoption.\n• Coordinated user acquisition initiatives through AMAs and workshops.\n• Negotiated and structured collaborations aligned with DAO growth objectives."
+      company: "TechCorp Inc.",
+      role: "Software Engineer",
+      startDate: "2024-05",
+      endDate: "2025-01",
+      description: "• Designed and delivered intuitive web and mobile interfaces by translating user research, business goals, and product requirements into wireframes, prototypes, and high-fidelity designs.\n• Collaborated with product managers, developers, and stakeholders to refine user flows, create scalable design systems, and ensure consistent, high-quality user experiences across all platforms.\n• Conducted usability testing and iterative improvements to optimize conversion, reduce friction in user journeys, and enhance overall product performance."
     },
     {
       id: '2',
-      company: "Bantu Exchange",
-      role: "Business Development Manager",
-      startDate: "2023",
-      endDate: "2024",
-      description: "• Supported exchange growth initiatives by coordinating user acquisition efforts.\n• Collaborated with marketing teams to align campaigns with compliance goals.\n• Managed reporting and performance tracking across BD and marketing."
+      company: "Amigo",
+      role: "Software Engineer",
+      startDate: "2025-02",
+      endDate: "Present",
+      description: "• Designed and delivered intuitive web and mobile interfaces by translating user research, business goals, and product requirements into wireframes, prototypes, and high-fidelity designs.\n• Collaborated with product managers, developers, and stakeholders to refine user flows, create scalable design systems, and ensure consistent, high-quality user experiences across all platforms."
     }
   ],
   education: [
     {
       id: '1',
-      school: "Kogi State University",
-      degree: "B.Sc. Chemistry",
-      year: "2015 - 2019"
+      school: "University of California • Berkeley, CA",
+      degree: "Bachelor of Science in Computer Science",
+      year: "Feb 2025"
     }
   ],
-  skills: "Business Development, KOL Management, Blockchain Technology, Market Analysis, Team Leadership, Data Analysis Tools (Excel)",
-  certifications: "Google Data Analytics Certificate, Coursera Business Management",
-  keyAchievements: "• Built and managed partnership pipelines that consistently drove trading activity and improved campaign ROI.\n• Strengthened brand visibility by coordinating over 5+ offline events and educational seminars across major cities.\n• Drove affiliate growth at Bybit, onboarding high-value partners and boosting trading volume through targeted campaign management.",
+  skills: "Graphic design, Prototyping, Wireframing, Product management, HTML, CSS, User Experience, Communication",
+  certifications: "Google UX Design Certificate - Google, 2022",
+  keyAchievements: "• Redesigned a mobile onboarding flow that increased user engagement by 45% and reduced drop-off rate by 30%.\n• Redesigned a mobile onboarding flow that increased user engagement by 45% and reduced drop-off rate by 30%.",
   font: 'Helvetica, Arial, sans-serif',
   fontSize: 12.5
 };

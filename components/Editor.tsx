@@ -85,8 +85,8 @@ export default function Editor({ data, onChange, template, onTemplateChange, onB
            </button>
         </div>
 
-        {/* Resume Paper */}
-        <div className="resume-page w-full max-w-[210mm] min-h-[297mm] bg-white shadow-2xl mb-20 transition-transform duration-300 origin-top print:shadow-none print:mb-0 print:transform-none">
+        {/* Resume Preview Container (Self-paginating) */}
+        <div className="w-full flex justify-center pb-20 print:pb-0">
           <ResumePreview data={data} template={template} />
         </div>
       </div>

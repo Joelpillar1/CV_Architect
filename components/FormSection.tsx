@@ -19,7 +19,7 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
     onChange({ ...data, [field]: value });
   };
 
-  const handleExperienceChange = (index: number, field: keyof Experience, value: string) => {
+  const handleExperienceChange = (index: number, field: keyof Experience, value: any) => {
     const newExp = [...data.experience];
     newExp[index] = { ...newExp[index], [field]: value };
     handleChange('experience', newExp);
@@ -131,7 +131,6 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
       if (response.text) {
         const optimizedData = JSON.parse(response.text);
         
-        // Merge optimized data with existing data (preserving personal info, education, etc.)
         onChange({
           ...data,
           summary: optimizedData.summary || data.summary,
@@ -165,8 +164,8 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
               <Input label="Phone" value={data.phone} onChange={v => handleChange('phone', v)} />
             </div>
             <div className="grid grid-cols-2 gap-6">
-              <Input label="LinkedIn" value={data.linkedin} onChange={v => handleChange('linkedin', v)} />
-              <Input label="Location" value={data.location} onChange={v => handleChange('location', v)} />
+              <Input label="LinkedIn" value={data.linkedin} onChange={v => handleChange('linkedin', v)} placeholder="linkedin.com/in/username" />
+              <Input label="@ Handle (Optional)" value={data.atHandle || ''} onChange={v => handleChange('atHandle', v)} placeholder="@username"/>
             </div>
             <div>
                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Professional Summary</label>
@@ -201,8 +200,23 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
                   <Input label="Company" value={exp.company} onChange={v => handleExperienceChange(index, 'company', v)} />
                   <Input label="Role" value={exp.role} onChange={v => handleExperienceChange(index, 'role', v)} />
                   <div className="grid grid-cols-2 gap-5">
-                    <Input label="Start Date" placeholder="Jan 2022" value={exp.startDate} onChange={v => handleExperienceChange(index, 'startDate', v)} />
-                    <Input label="End Date" placeholder="Present" value={exp.endDate} onChange={v => handleExperienceChange(index, 'endDate', v)} />
+                    <MonthInput label="Start Date" value={exp.startDate} onChange={v => handleExperienceChange(index, 'startDate', v)} />
+                    <MonthInput label="End Date" value={exp.endDate} onChange={v => handleExperienceChange(index, 'endDate', v)} disabled={exp.endDate === 'Present'} />
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`current-${exp.id}`}
+                      checked={exp.endDate === 'Present'}
+                      onChange={(e) => {
+                        const newEndDate = e.target.checked ? 'Present' : '';
+                        handleExperienceChange(index, 'endDate', newEndDate);
+                      }}
+                      className="h-4 w-4 rounded border-gray-300 text-brand-green focus:ring-brand-green"
+                    />
+                    <label htmlFor={`current-${exp.id}`} className="ml-2 block text-sm text-gray-700">
+                      I currently work here
+                    </label>
                   </div>
                   <div>
                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Description</label>
@@ -302,11 +316,7 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
 
       case 'design':
         const templates: { id: TemplateType; name: string }[] = [
-            { id: 'modern', name: 'The Modernist' },
-            { id: 'classic', name: 'The Professional' },
-            { id: 'academic', name: 'Academic Scholar' },
-            { id: 'executive', name: 'Strategic Executive' },
-            { id: 'minimal', name: 'Pure Minimal' },
+            { id: 'vanguard', name: 'The Vanguard' },
         ];
 
         const fonts = [
@@ -468,15 +478,29 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
   return renderContent();
 }
 
-const Input = ({ label, value, onChange, placeholder }: { label: string, value: string, onChange: (v: string) => void, placeholder?: string }) => (
+const Input = ({ label, value, onChange, placeholder, type = 'text', disabled = false }: { label: string, value: string, onChange: (v: string) => void, placeholder?: string, type?: string, disabled?: boolean }) => (
   <div>
     <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">{label}</label>
     <input 
-      type="text"
-      className="w-full rounded-xl border-gray-200 border bg-white shadow-sm focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 px-4 py-3 text-sm text-brand-dark placeholder-gray-400 transition-all duration-200 outline-none"
+      type={type}
+      className="w-full rounded-xl border-gray-200 border bg-white shadow-sm focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 px-4 py-3 text-sm text-brand-dark placeholder-gray-400 transition-all duration-200 outline-none disabled:bg-gray-100 disabled:text-gray-400"
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
+      disabled={disabled}
     />
   </div>
+);
+
+const MonthInput = ({ label, value, onChange, disabled = false }: { label: string, value: string, onChange: (v: string) => void, disabled?: boolean }) => (
+    <div>
+      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">{label}</label>
+      <input 
+        type="month"
+        className="w-full rounded-xl border-gray-200 border bg-white shadow-sm focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 px-4 py-3 text-sm text-brand-dark placeholder-gray-400 transition-all duration-200 outline-none disabled:bg-gray-100 disabled:text-gray-400"
+        value={value === 'Present' ? '' : value}
+        onChange={e => onChange(e.target.value)}
+        disabled={disabled}
+      />
+    </div>
 );

@@ -29,12 +29,21 @@
               'soft': '0 4px 20px -2px rgba(51, 60, 77, 0.05)',
               'sharp': '0 1px 2px 0 rgba(51, 60, 77, 0.05)',
               'float': '0 10px 40px -10px rgba(51, 60, 77, 0.15)',
+            },
+            animation: {
+              fadeIn: 'fadeIn 0.5s ease-in-out forwards',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: 0, transform: 'translateY(10px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
             }
           },
         },
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&family=Fira+Code&display=swap" rel="stylesheet">
     <style>
       body {
         -webkit-font-smoothing: antialiased;
@@ -57,11 +66,52 @@
       }
       
       @media print {
-        @page { margin: 0; }
-        body { margin: 0; -webkit-print-color-adjust: exact; }
+        @page { 
+            margin: 0; 
+            size: auto; 
+        }
+        html, body, #root { 
+            margin: 0 !important; 
+            padding: 0 !important;
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact;
+            background: white !important;
+            height: auto !important;
+            overflow: visible !important;
+            width: 100% !important;
+        }
+        
         .no-print { display: none !important; }
-        .print-only { display: block !important; width: 100%; height: 100%; position: absolute; top: 0; left: 0; margin: 0; padding: 0; }
-        .resume-page { margin: 0 !important; box-shadow: none !important; border: none !important; width: 100% !important; height: auto !important; page-break-after: always; }
+        
+        .print-only { 
+            display: block !important; 
+            position: static !important;
+            width: 100% !important; 
+            height: auto !important; 
+            margin: 0 !important; 
+            padding: 0 !important;
+            overflow: visible !important;
+            background: white !important;
+            z-index: 9999;
+        }
+        
+        .resume-page { 
+            margin: 0 !important; 
+            box-shadow: none !important; 
+            border: none !important; 
+            width: 100% !important; 
+            height: 297mm !important; /* Enforce A4 height for each page */
+            min-height: 297mm !important;
+            page-break-after: always; 
+            break-after: page;
+            overflow: hidden !important; /* Hide any accidental overflow */
+            padding: 0 !important; /* Let inner content handle padding */
+        }
+        
+        .resume-page:last-child {
+            page-break-after: auto;
+            break-after: auto;
+        }
       }
     </style>
   <script type="importmap">
@@ -71,6 +121,7 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
   }
 }
