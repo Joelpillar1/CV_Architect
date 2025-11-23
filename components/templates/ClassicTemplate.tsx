@@ -1,6 +1,19 @@
 import React from 'react';
 import { ResumeData } from '../../types';
 
+const formatMonthYear = (dateString: string) => {
+  if (!dateString || dateString.toLowerCase() === 'present') {
+    return 'Present';
+  }
+  try {
+    const [year, month] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1);
+    return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+  } catch (e) {
+    return dateString;
+  }
+};
+
 export default function ClassicTemplate({ data }: { data: ResumeData }) {
   return (
     <>
@@ -41,7 +54,9 @@ export default function ClassicTemplate({ data }: { data: ResumeData }) {
         <div key={exp.id} className="break-inside-avoid">
             <div className="flex justify-between items-center mb-1">
             <h3 className="font-bold text-lg text-gray-900">{exp.role}</h3>
-            <span className="text-sm font-bold text-gray-600">{exp.startDate} – {exp.endDate}</span>
+            <span className="text-sm font-bold text-gray-600">
+              {formatMonthYear(exp.startDate)} – {formatMonthYear(exp.endDate)}
+            </span>
             </div>
             <p className="font-semibold italic text-gray-700 mb-3">{exp.company}</p>
             <div className="text-gray-800 pl-5">

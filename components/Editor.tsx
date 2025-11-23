@@ -10,11 +10,12 @@ interface EditorProps {
   template: TemplateType;
   onTemplateChange: (template: TemplateType) => void;
   onBack: () => void;
+  onSaveAsTemplate: () => void;
 }
 
 export type EditorTab = 'personal' | 'education' | 'experience' | 'achievements' | 'design' | 'job-match';
 
-export default function Editor({ data, onChange, template, onTemplateChange, onBack }: EditorProps) {
+export default function Editor({ data, onChange, template, onTemplateChange, onBack, onSaveAsTemplate }: EditorProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTab>('personal');
 
@@ -61,6 +62,7 @@ export default function Editor({ data, onChange, template, onTemplateChange, onB
               onChange={onChange} 
               currentTemplate={template}
               onTemplateChange={onTemplateChange}
+              onSaveAsTemplate={onSaveAsTemplate}
             />
         </div>
       </div>

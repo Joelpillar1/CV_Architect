@@ -2,6 +2,19 @@ import React from 'react';
 import { ResumeData } from '../../types';
 import { Mail, Phone, Linkedin, MapPin } from 'lucide-react';
 
+const formatMonthYear = (dateString: string) => {
+  if (!dateString || dateString.toLowerCase() === 'present') {
+    return 'Present';
+  }
+  try {
+    const [year, month] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1);
+    return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+  } catch (e) {
+    return dateString;
+  }
+};
+
 export default function MinimalTemplate({ data }: { data: ResumeData }) {
   return (
     <>
@@ -46,7 +59,9 @@ export default function MinimalTemplate({ data }: { data: ResumeData }) {
                    <div key={exp.id} className="break-inside-avoid group">
                       <div className="flex justify-between items-baseline mb-2">
                          <h3 className="text-lg font-normal text-black">{exp.company}</h3>
-                         <span className="text-xs text-gray-400 font-mono">{exp.startDate} — {exp.endDate}</span>
+                         <span className="text-xs text-gray-400 font-mono">
+                           {formatMonthYear(exp.startDate)} — {formatMonthYear(exp.endDate)}
+                         </span>
                       </div>
                       <div className="text-sm font-medium text-gray-500 mb-4">{exp.role}</div>
                       <p className="text-gray-600 text-sm leading-relaxed font-light text-justify whitespace-pre-line">{exp.description}</p>

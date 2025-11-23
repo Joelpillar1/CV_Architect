@@ -31,6 +31,14 @@ export interface ResumeData {
   jobDescription?: string; // New field for Job Match tab
   font?: string;
   fontSize?: number;
+  currentTag?: string; // For tagging saved templates
+}
+
+export interface SavedTemplate {
+  id: string;
+  tag: string;
+  baseTemplate: TemplateType;
+  data: ResumeData;
 }
 
 // Add 'vanguard' and remove the deleted templates for now.
@@ -75,5 +83,6 @@ export const INITIAL_DATA: ResumeData = {
   certifications: "Google UX Design Certificate - Google, 2022",
   keyAchievements: "• Redesigned a mobile onboarding flow that increased user engagement by 45% and reduced drop-off rate by 30%.\n• Redesigned a mobile onboarding flow that increased user engagement by 45% and reduced drop-off rate by 30%.",
   font: 'Helvetica, Arial, sans-serif',
-  fontSize: 12.5
+  fontSize: 12.5,
+  currentTag: 'Software Engineer Role',
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { ResumeData, TemplateType } from '../types';
 import VanguardTemplate from './templates/VanguardTemplate';
 
@@ -11,28 +11,23 @@ interface ResumePreviewProps {
 export default function ResumePreview({ data, template }: ResumePreviewProps) {
   const sourceRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLDivElement>(null);
-  // We use a key to force re-render when data changes, triggering the effect
-  const [renderKey, setRenderKey] = useState(0);
 
-  useEffect(() => {
-    setRenderKey(prev => prev + 1);
-  }, [data, template]);
-
-  // This effect handles the "DOM Projection" logic
-  useEffect(() => {
+  // useLayoutEffect is critical here. It runs synchronously after DOM mutations but before the browser paints.
+  // This prevents any flicker or flash of un-paginated content when data changes.
+  useLayoutEffect(() => {
     if (!sourceRef.current || !targetRef.current) return;
 
     const sourceContainer = sourceRef.current;
     const targetContainer = targetRef.current;
     
-    // Clear previous pages
+    // Clear previous pages to start fresh
     targetContainer.innerHTML = '';
 
-    // Helper to create a blank page
+    // Helper to create a blank page element
     const createPage = (pageIndex: number) => {
         const page = document.createElement('div');
-        // Note: We use min-height for visual consistency, but we calculate overflow based on actual content height.
-        // For the logic to work, we initially let it be auto-height.
+        // We set the A4 dimensions and styling for each page.
+        // The print styles in index.html will handle how these translate to PDF.
         page.className = 'resume-page w-[210mm] bg-white shadow-2xl mb-8 p-12 relative mx-auto print:shadow-none print:mb-0 print:break-after-page origin-top';
         page.setAttribute('data-page', pageIndex.toString());
         return page;
@@ -42,44 +37,45 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
     let currentPage = createPage(currentPageIndex);
     targetContainer.appendChild(currentPage);
 
-    // A4 height in px at 96dpi is approx 1122.5px.
-    // We subtract a safety buffer for the bottom margin.
-    const A4_CONTENT_LIMIT = 1080; // Slightly less than 1123 to prevent edge clipping
+    // A4 height in pixels at 96dpi is ~1123px.
+    // With p-12 (48px) top/bottom padding, available content height is ~1027px.
+    // We use a safe limit to trigger a page break.
+    const A4_CONTENT_LIMIT = 1080;
 
-    // Convert HTMLCollection to Array to iterate safely
+    // Get all top-level elements from the hidden source resume
     const nodes = Array.from(sourceContainer.children) as HTMLElement[];
 
     nodes.forEach((node) => {
-      // Clone the node to project it into the page
+      // Clone the node to move it into the visible pages
       const clone = node.cloneNode(true) as HTMLElement;
       currentPage.appendChild(clone);
       
-      // Check if the page is overflowing
+      // Check if adding this node caused the page to overflow
       if (currentPage.scrollHeight > A4_CONTENT_LIMIT) {
-         // Only break if this isn't the *only* item on the page.
-         // If it's the only item and it's huge, let it overflow (better than infinite loop or disappearing).
+         // To prevent an infinite loop (if a single item is taller than a page),
+         // we only create a new page if the current page already had other content.
          if (currentPage.childElementCount > 1) {
-             // Remove the node we just added
+             // It overflowed, so remove the node from this page...
              currentPage.removeChild(clone);
              
-             // Create a new page
+             // ...create a new page...
              currentPageIndex++;
              currentPage = createPage(currentPageIndex);
              targetContainer.appendChild(currentPage);
              
-             // Add the node to the new page
+             // ...and add the node to the new page.
              currentPage.appendChild(clone);
          }
       }
     });
 
-    // Post-processing: Ensure all pages have the visual look of A4
+    // Final pass: Ensure all pages have the full A4 visual height, even if not full of content.
     const pages = Array.from(targetContainer.children) as HTMLElement[];
     pages.forEach(page => {
        page.style.minHeight = '297mm';
     });
 
-  }, [renderKey]);
+  }, [data, template]); // This effect runs directly whenever data or template changes.
 
   // Dynamic Font Application
   const containerStyle = {
@@ -102,17 +98,17 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
 
   return (
     <div className="w-full flex justify-center relative">
-        {/* Hidden Source - Rendered off-screen to measure height */}
+        {/* Hidden Source Container: React renders here first for measurement */}
         <div 
             ref={sourceRef} 
             style={{ 
                 ...containerStyle,
                 position: 'absolute',
                 top: 0,
-                left: '-9999px',
+                left: '-9999px', // Rendered off-screen
                 width: '210mm',
                 background: 'white',
-                padding: '48px', // Match p-12
+                padding: '48px', // Match p-12 for accurate measurement
                 visibility: 'hidden',
                 pointerEvents: 'none'
             }}
@@ -120,7 +116,7 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
             {renderTemplate()}
         </div>
 
-        {/* Target - Where pages are projected */}
+        {/* Visible Target Container: The useLayoutEffect populates this with paginated content */}
         <div ref={targetRef} className="flex flex-col items-center w-full" style={containerStyle} />
     </div>
   );

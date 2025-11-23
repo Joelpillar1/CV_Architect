@@ -2,6 +2,19 @@ import React from 'react';
 import { ResumeData } from '../../types';
 import { Mail, Phone, Linkedin } from 'lucide-react';
 
+const formatMonthYear = (dateString: string) => {
+  if (!dateString || dateString.toLowerCase() === 'present') {
+    return 'Present';
+  }
+  try {
+    const [year, month] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1);
+    return date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+  } catch (e) {
+    return dateString;
+  }
+};
+
 export default function AcademicTemplate({ data }: { data: ResumeData }) {
   return (
     <>
@@ -43,7 +56,7 @@ export default function AcademicTemplate({ data }: { data: ResumeData }) {
         <div key={exp.id} className="break-inside-avoid">
             <div className="flex justify-between font-bold text-base text-gray-900 mb-1">
             <span>{exp.role}</span>
-            <span>{exp.startDate} – {exp.endDate}</span>
+            <span>{formatMonthYear(exp.startDate)} – {formatMonthYear(exp.endDate)}</span>
             </div>
             <div className="italic text-gray-600 mb-2 font-serif">{exp.company}</div>
             <div className="pl-4 border-l border-gray-200 text-gray-800 leading-relaxed space-y-1 text-justify">

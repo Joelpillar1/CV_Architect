@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ResumeData, Experience, Education, TemplateType } from '../types';
-import { Plus, Trash2, LayoutTemplate, Check, Type as TypeIcon, Sparkles, Loader2, Target } from 'lucide-react';
+import { Plus, Trash2, LayoutTemplate, Check, Type as TypeIcon, Sparkles, Loader2, Target, Tag, Bookmark } from 'lucide-react';
 import { EditorTab } from './Editor';
 import { GoogleGenAI, Type } from "@google/genai";
 
@@ -10,9 +10,10 @@ interface FormSectionProps {
   onChange: (data: ResumeData) => void;
   currentTemplate: TemplateType;
   onTemplateChange: (t: TemplateType) => void;
+  onSaveAsTemplate: () => void;
 }
 
-export default function FormSection({ activeTab, data, onChange, currentTemplate, onTemplateChange }: FormSectionProps) {
+export default function FormSection({ activeTab, data, onChange, currentTemplate, onTemplateChange, onSaveAsTemplate }: FormSectionProps) {
   const [isOptimizing, setIsOptimizing] = useState(false);
   
   const handleChange = (field: keyof ResumeData, value: any) => {
@@ -408,6 +409,27 @@ export default function FormSection({ activeTab, data, onChange, currentTemplate
                              <span>Large</span>
                            </div>
                         </div>
+                     </div>
+                 </div>
+
+                 <div className="pt-6 border-t border-gray-200">
+                     <h3 className="font-bold text-sm text-gray-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+                       <Tag size={16} /> Save & Tag
+                     </h3>
+                     <div className="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+                        <Input 
+                            label="Template Tag" 
+                            value={data.currentTag || ''} 
+                            onChange={v => handleChange('currentTag', v)} 
+                            placeholder="e.g. For Senior Roles"
+                        />
+                        <p className="text-xs text-gray-400 mt-2 mb-4">Add a tag to easily identify this version in "My Templates".</p>
+                        <button 
+                            onClick={onSaveAsTemplate}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold shadow-lg transition-all duration-300 bg-brand-dark text-white hover:bg-gray-800"
+                        >
+                            <Bookmark size={16} /> Save as New Template
+                        </button>
                      </div>
                  </div>
             </div>
